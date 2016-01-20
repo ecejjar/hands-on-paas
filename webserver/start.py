@@ -1,3 +1,4 @@
+import os
 import BaseHTTPServer
 from urlparse import urlparse
 from functools import reduce
@@ -28,7 +29,7 @@ class TempRequestHandler ( BaseHTTPServer.BaseHTTPRequestHandler ):
         html = "<html><h1>Today's average temperatures</h1>" + (
             "<table>%s</table></html>" % reduce(
                 add,
-                map(lambda ts_tr: "<tr><td>%d</td><td>%d</td></tr>" % ts_tr,
+                map(lambda ts_tr: "<tr><td>%s</td><td>%s</td></tr>" % ts_tr,
                     timestamps.items()),
                 ""
             )
@@ -37,9 +38,9 @@ class TempRequestHandler ( BaseHTTPServer.BaseHTTPRequestHandler ):
 
     def _temp ( query ):
         assert(query)
-        time = int(query.split('=')[-1])
+        time = query.split('=')[-1]
         temp = redis_client.hget("aggregatedtempdata", time)
-        html = "<html><h1>Average temperature at %d hours: %d</h1></html>" \
+        html = "<html><h1>Average temperature at %s hours: %s</h1></html>" \
             % (time, temp)
         return(html)
     

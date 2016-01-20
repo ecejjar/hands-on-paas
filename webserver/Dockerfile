@@ -7,5 +7,6 @@ RUN [ "./run_command.sh", "pip", "install", "redis" ]
 ADD start.py /app/
 ADD test.py /app/
 ENV PYTHONPATH="/app"
+EXPOSE 8000
 RUN [ "python", "/app/test.py" ]
 ENTRYPOINT [ "python", "/app/start.py" ] 
