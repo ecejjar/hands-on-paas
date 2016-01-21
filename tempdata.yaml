@@ -1,0 +1,36 @@
+nats:
+  image: nats
+  expose:
+    - "4222"
+    - "6222"
+    - "8222"
+  restart: on-failure
+redis:
+  image: tutum.co/ecejjar/redis
+  expose:
+    - "6379"
+  restart: on-failure
+  volumes:
+    - "/var/lib/redis:/data"
+nats2redis:
+  image: tutum.co/ecejjar/nats2redis
+  restart: on-failure
+  autoredeploy: true
+  links:
+    - "nats"
+    - "redis"
+  environment:
+    - "NATS_URI=tcp://nats:4222"
+    - "REDIS_URI=tcp://redis:6379"
+webserver:
+  image: tutum.co/ecejjar/webserver
+  restart: on-failure
+  autoredeploy: true
+  expose:
+    - "8000"
+  ports:
+    - "80:8000"
+  links:
+    - "redis"
+  environment:
+    - "REDIS_URI=tcp://redis:6379"
