@@ -1,3 +1,4 @@
+import os
 from time import sleep
 import json
 import pynats
@@ -10,7 +11,7 @@ redis_client = None
 def handle ( tempdata ):
     global curhour, accutemp
     parsedtempdata = json.loads(tempdata)
-    nxthour = int(parsedtempdata["time"].split(':'))
+    nxthour = int(parsedtempdata["time"].split(':')[0])
     if curhour is None:
         curhour = nxthour
     elif nxthour > curhour:
